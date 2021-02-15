@@ -1,0 +1,128 @@
+
+-- DDL: DATA DEFINITION LANGUAGE --
+/*
+CREATE SCHEMA cfbcursos;
+CREATE TABLE cfbcursos.cliente(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(50) NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
+    data_nasc DATETIME
+);
+ALTER TABLE cfbcursos.cliente ADD COLUMN id_tipo_cliente INT;
+ALTER TABLE cfbcursos.cliente ADD COLUMN idade TINYINT;
+ALTER TABLE cfbcursos.cliente ADD CONSTRAINT fk_tipo_cliente  FOREIGN KEY (id_tipo_cliente) REFERENCES tipo_cliente (id);
+*/
+
+/*
+DROP TABLE cliente;
+DROP SCHEMA banco_teste2;
+ALTER TABLE cliente  MODIFY COLUMN nome VARCHAR(60);
+ALTER TABLE cliente DROP COLUMN data_nasc;
+*/
+
+/* CREATE TABLE cfbcursos.tipo_cliente(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    dsc VARCHAR(100) NOT NULL
+);
+*/
+/* Adicionar a restrição de chave estrangeira na tabela cliente, pelo campo tipo_cliente
+ALTER TABLE cfbcursos.cliente ADD CONSTRAINT fk_tipo_cliente  FOREIGN KEY (id_tipo_cliente) REFERENCES tipo_cliente (id);
+*/
+
+-- DML: DATA MANAGE LANGUAGE -- 
+/*
+INSERT INTO cliente
+	(nome, cpf, data_nasc, id_tipo_cliente)
+    VALUES
+    ('Felipe', '12345678901', '1992-01-15', 1);
+
+SELECT * 
+	FROM cliente
+    ORDER BY nome;
+SELECT * FROM tipo_cliente;
+SELECT * 
+	FROM cliente;
+// Inserir dados na tabela cliente_2 a partir de um select de outra tabela ( cliente ), adiciona todos os registros da tabela cliente na tabela cliente_2
+INSERT INTO cliente_2 
+	(nome, 
+    cpf, 
+    data_nasc, 
+    id_tipo_cliente)
+SELECT 
+	nome, 
+    cpf, 
+    data_nasc, 
+    id_tipo_cliente
+FROM cliente
+*/
+
+/* 
+    GROUP BY
+    HAVING 
+*/
+
+Comando DISTINCT serve para remover registros duplicados em uma consulta:
+SELECT DISTINCT id_cliente
+	FROM venda;
+
+
+SUBSELECT (Pode substituir o auto incremento):
+INSERT INTO cliente VALUES (
+	(SELECT 
+		MAX(c.id) + 1
+	FROM 
+		cliente c),
+	'February',
+    '88888888888',
+	'1988-04-21',
+	2
+);
+
+/*CREATE VIEW cpf_cli AS
+	SELECT id, cpf
+    FROM cliente;
+*/
+
+CRIANDO VIEW:
+
+CREATE VIEW niver_mes_atual AS
+SELECT 
+	id, 
+    nome, 
+    DAY(data_nasc) AS dia_aniversario
+FROM
+	cliente
+WHERE
+	MONTH(data_nasc) = MONTH(curdate());
+
+TRABALHANDO COM JOIN: (INNER JOIN)
+
+SELECT
+	cliente.nome, 
+    cliente.cpf, 
+    cliente.data_nasc, 
+    tipo_cliente.dsc
+FROM
+	cliente
+INNER JOIN tipo_cliente
+WHERE cliente.id_tipo_cliente = tipo_cliente.id
+ORDER BY cliente.nome;
+
+SELECT 
+	v.data_venda,
+    v.valor,
+    c.nome,
+    c.cpf,
+    t.dsc
+FROM 
+	venda v
+INNER JOIN cliente c, tipo_cliente t
+WHERE v.id_cliente = c.id
+	AND c.id_tipo_cliente = t.id
+ORDER BY v.valor DESC;
+
+PESQUISAR: GROUP BY e HAVING
+
+
+
+
